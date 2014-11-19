@@ -1,0 +1,517 @@
+<anf>
+
+    <globals>
+        <drawing mode="fill" shading="flat" background="0.2 0.0 0.2 0.9" />
+        <culling face="back" order="ccw" />
+        <lighting doublesided="true" local="true" enabled="true" ambient="0.2 0.6 1.0 0.7" />
+	</globals>
+    
+    <cameras initial="C1" >
+
+        <perspective id="C1" near="0.0" far="70.0" angle="90.0" pos="12.5 10 12" target="12.5 5 5" />
+		<perspective id="C2" near="0.0" far="70.0" angle="140.0" pos="25 10 12" target="12.5 5 5" />
+        <ortho id="C3" direction="x" near="-20.0" far="20.0" left="-10" right="10" top="10" bottom="-10" />
+		<ortho id="C4" direction="y" near="-60.0" far="70.0" left="0" right="15" top="5.0" bottom="-15" />
+
+    </cameras>
+  
+
+    <!-- bloco de luzes -->
+    <lights>
+            <!-- Deve existir pelo menos uma luz declarada -->
+            <!-- Atributo "marker" indica se deve ou nao desenhar-se uma esfera representativa -->
+            <light id="L1" type="omni" enabled="true" marker="false" pos="7.5 20 5" >
+               <component type="ambient" value="1.0 0.8 0.0 0.4" />
+               <component type="diffuse" value="1.0 0.8 0.0 0.4" />
+               <component type="specular" value="1.0 0.8 0.0 0.4" />
+
+            </light>
+            <!-- Deve existir pelo menos uma luz declarada -->
+            <!-- Atributo "marker" indica se deve ou nao desenhar-se uma esfera representativa -->
+            <light id="L2" type="omni" enabled="true" marker="false" pos="17.5 20 5" >
+               <component type="ambient" value="1.0 0.8 0.0 0.4" />
+               <component type="diffuse" value="1.0 0.8 0.0 0.4" />
+               <component type="specular" value="1.0 0.8 0.0 0.4" />
+
+            </light>
+            <light id="L3" type="spot" enabled="true" marker="false" pos="12.5 15 5" target="12.5 9 5"  
+                angle="19" exponent="0.9" >
+
+                <component type="ambient" value="1.0 0.0 0.0 0.9" />
+               <component type="diffuse" value="1.0 0.0 0.0 0.9" />
+               <component type="specular" value="1.0 0.0 0.0 0.9" />
+
+            </light>
+    </lights>
+
+    <!-- bloco de texturas. Este bloco tem de existir mas pode estar vazio, se nao forem usadas texturas -->
+    <!--   ver topico 'Notas finais' no enunciado sobre os parametros texlength_... -->
+   
+    <textures>       
+         <texture id="text_balcon" file="textures/robot4.png" texlength_s="0.1" texlength_t="0.5" />
+		 <texture id="text_balcon_post" file="textures/balcon_post.jpg" texlength_s="1" texlength_t="1" />
+		 <texture id="text_floor" file="textures/floor.jpg" texlength_s="4" texlength_t="4" />
+		 <texture id="text_stool_post" file="textures/stool_post.jpg" texlength_s="1" texlength_t="1" />
+		 <texture id="text_stool_top" file="textures/stool_top.jpg" texlength_s="1" texlength_t="1" />
+    </textures>
+
+    <!-- bloco de materiais; -->
+    <appearances>
+        <!-- deve existir um ou mais blocos "appearance" -->
+        <!-- IMPORTANTE: -->
+        <!--   textureref e opcional, a utilizar caso haja textura associada a esta aparencia --> 
+        <appearance id="default" shininess="45" >
+               <component type="ambient" value="1 1 1 1" />
+               <component type="diffuse" value="1 1 1 1" />
+               <component type="specular" value="1 1 1 1" />
+        </appearance>
+		<appearance id="app_floor" shininess="45" textureref="text_floor" >
+               <component type="ambient" value="0.8 0.4 0.0 1" />
+               <component type="diffuse" value="0.8 0.4 0.0 1" />
+               <component type="specular" value="0.8 0.4 0.0 1" />
+        </appearance>
+		<appearance id="app_balcon_top" shininess="45" textureref="text_balcon" >
+               <component type="ambient" value="0.8 0.4 0.0 1" />
+               <component type="diffuse" value="0.8 0.4 0.0 1" />
+               <component type="specular" value="0.8 0.4 0.0 1" />
+        </appearance>
+		<appearance id="app_balcon_post" shininess="100" textureref="text_balcon_post" >
+               <component type="ambient" value="0.5 0.5 0.5 1" />
+               <component type="diffuse" value="0.7 0.7 0.7 1" />
+               <component type="specular" value="1 1 1 1" />
+        </appearance>
+		<appearance id="app_stool_top" shininess="45" textureref="text_stool_top" >
+               <component type="ambient" value="0.8 0.4 0.0 1" />
+               <component type="diffuse" value="0.8 0.4 0.0 1" />
+               <component type="specular" value="0.8 0.4 0.0 1" />
+        </appearance>
+		<appearance id="app_stool_post" shininess="100" textureref="text_stool_post" >
+               <component type="ambient" value="0.5 0.5 0.5 1" />
+               <component type="diffuse" value="0.7 0.7 0.7 1" />
+               <component type="specular" value="1 1 1 1" />
+        </appearance>
+    </appearances>
+
+    <animations>
+          <animation id="test" span="10" type="linear">
+                <controlpoint xx="0" yy="0" zz="0" />
+                <controlpoint xx="10" yy="0" zz="0" />
+                <controlpoint xx="10" yy="0" zz="10" />
+                <controlpoint xx="0" yy="0" zz="10" />
+                <controlpoint xx="0" yy="10" zz="0" />
+                 <controlpoint xx="0" yy="0" zz="0" />
+          </animation>
+
+          <animation id="test1" span="10" type="linear">
+                <controlpoint xx="0" yy="0" zz="0" />
+                <controlpoint xx="10" yy="0" zz="0" />
+                <controlpoint xx="10" yy="0" zz="10" />
+                <controlpoint xx="0" yy="0" zz="10" />
+                <controlpoint xx="0" yy="10" zz="0" />
+                 <controlpoint xx="15" yy="0" zz="5" />
+          </animation>
+
+          <animation id="rot" span="3" type="circular" center= "-5 0 0" radius = "5" startang="0" rotang = "70"/>
+    </animations>
+    
+   <graph rootid="bar">
+		<node id="bar" displaylist="false">
+			<transforms>
+            </transforms>
+          
+			<appearanceref id="default" />
+            
+
+
+            <primitives>   
+             </primitives>
+               
+            <descendants>
+                <noderef id="floor" />
+				<noderef id="counter" />
+				<noderef id="stools" />
+            </descendants>
+        </node>
+		
+		<node id="floor">
+            <transforms>
+                <!-- <transform type="translate" to="15 0 5" /> -->
+                <!-- <transform type="scale" factor="30 0.5 20" /> -->
+            </transforms>
+            
+            <appearanceref id="app_stool_top" />
+
+            <primitives>  
+                <patch order="3" partsU="10" partsV="10" compute="fill">
+
+                     <controlpoint x="0" y="0" z="0" />
+                     <controlpoint x="0" y="5" z="-2" />
+                     <controlpoint x="0" y="-5" z="-4" />
+                     <controlpoint x="0" y="0" z="-6" />
+
+                     <controlpoint x="2" y="0" z="0" />
+                     <controlpoint x="2" y="-5" z="-2" />
+                     <controlpoint x="2" y="5" z="-4" />
+                     <controlpoint x="2" y="0" z="-6" />
+
+                     <controlpoint x="4" y="0" z="0" />
+                     <controlpoint x="4" y="5" z="-2" />
+                     <controlpoint x="4" y="-5" z="-4" />
+                     <controlpoint x="4" y="0" z="-6" />
+                 </patch>
+             </primitives>
+               
+            <descendants>
+                <!--<noderef id="cube" /> -->
+            </descendants>
+        </node>
+		
+		<node id="counter" displaylist="false">
+			<transforms>
+            </transforms>
+			
+			<appearanceref id="app_balcon_top" />
+
+            <primitives>  
+             </primitives>
+               
+            <descendants>
+				<noderef id="countertop" />
+				<noderef id="counterpost" />
+            </descendants>
+        </node>
+		
+		<node id="stools">
+			<transforms>
+            </transforms>
+			
+			<appearanceref id="default" />
+
+            <primitives>  
+             </primitives>
+               
+            <descendants>
+				<noderef id="stool1" />
+				<noderef id="stool2" />
+				<noderef id="stool3" />
+            </descendants>
+        </node>
+		
+		<node id="stool1">
+			<transforms>
+				 <transform type="translate" to="7.5 0 8" />
+            </transforms>
+			
+			<appearanceref id="default" />
+             <animationref id="test1" />
+
+
+            <primitives>  
+             </primitives>
+               
+            <descendants>
+				<noderef id="stool" />
+            </descendants>
+        </node>
+		
+		<node id="stool2">
+			<transforms>
+				 <transform type="translate" to="12.5 0 8" />
+            </transforms>
+			
+			<appearanceref id="default" />
+             <animationref id="rot" />
+            <primitives>  
+             </primitives>
+               
+            <descendants>
+				<noderef id="stool" />
+            </descendants>
+        </node>
+		
+		<node id="stool3">
+			<transforms>
+				 <transform type="translate" to="17.5 0 8" />
+            </transforms>
+			
+			<appearanceref id="default" />
+            <primitives>  
+             </primitives>
+               
+            <descendants>
+				<noderef id="stool" />
+            </descendants>
+        </node>
+		
+		<node id="stool">
+			<transforms>
+            </transforms>
+			
+			<appearanceref id="default" />
+
+            <primitives>  
+             </primitives>
+               
+            <descendants>
+				<noderef id="stool_top" />
+				<noderef id="stool_foot" />
+				<noderef id="stool_post" />
+            </descendants>
+        </node>
+		
+		<node id="stool_top">
+			<transforms>
+				<transform type="translate" to="0 3 0" />
+				<transform type="scale" factor="2 1 2" />
+            </transforms>
+			
+			<appearanceref id="app_stool_top" />
+
+            <primitives>  
+             </primitives>
+               
+            <descendants>
+				<noderef id="cil" />
+            </descendants>
+        </node>
+		
+		<node id="stool_post">
+			<transforms>
+				<transform type="scale" factor="0.5 3 0.5" />
+            </transforms>
+			
+			<appearanceref id="app_stool_post" />
+
+            <primitives>  
+             </primitives>
+               
+            <descendants>
+				<noderef id="cil" />
+            </descendants>
+        </node>
+		
+		<node id="stool_foot">
+			<transforms>
+				<transform type="rotate" axis="x" angle="90" />
+				<transform type="translate" to="0 0 -1.5" />
+				<transform type="scale" factor="1 1 0.5" />
+            </transforms>
+			
+			<appearanceref id="app_balcon_top" />
+
+            <primitives> 
+				<torus inner="0.5" outer="1.5" slices="20" loops="20" />
+             </primitives>
+               
+            <descendants>
+            </descendants>
+        </node>
+		
+		<node id="countertop">
+			<transforms>
+				<transform type="translate" to="12.5 6 2.5" />
+                <transform type="scale" factor="15 1 5" />
+
+            </transforms>
+			
+			<appearanceref id="inherit" />
+
+            <primitives>  
+             </primitives>
+               
+            <descendants>
+				<noderef id="cube" />
+            </descendants>
+        </node>
+		
+		<node id="counterpost">
+			<transforms>
+				<transform type="translate" to="0 0 2" />
+                <transform type="scale" factor="1 6 1" />
+            </transforms>
+			
+			<appearanceref id="inherit" />
+
+            <primitives>  
+             </primitives>
+               
+            <descendants>
+				<noderef id="cil1" />
+				<noderef id="cil2" />
+            </descendants>
+        </node>
+		
+		<node id="cil1">
+			<transforms>
+				<transform type="translate" to="16.25 0 0" />
+            </transforms>
+			
+			<appearanceref id="app_balcon_post" />
+
+            <primitives>  
+             </primitives>
+               
+            <descendants>
+				<noderef id="cil" />
+            </descendants>
+        </node>
+		
+		<node id="cil2">
+			<transforms>
+				<transform type="translate" to="8.75 0 0" />
+            </transforms>
+			
+			<appearanceref id="inherit" />
+
+            <primitives>  
+             </primitives>
+               
+            <descendants>
+				<noderef id="cil" />
+            </descendants>
+        </node>
+		
+		<node id="cil">
+			<transforms>
+				<transform type="rotate" axis="x" angle="-90" />
+            </transforms>
+			
+			<appearanceref id="inherit" />
+
+            <primitives>  
+				<cylinder base="1" top="1" height="1" slices="20" stacks="20" />
+             </primitives>
+               
+            <descendants>
+            </descendants>
+        </node>
+		
+		<node id="cube">
+			<transforms>
+            </transforms>
+			
+			<appearanceref id="inherit" />
+
+            <primitives>  
+             </primitives>
+               
+            <descendants>
+				<noderef id="r1" />
+				<noderef id="r2" />
+				<noderef id="r3" />
+				<noderef id="r4" />
+				<noderef id="r5" />
+				<noderef id="r6" />
+            </descendants>
+        </node>
+		
+		<node id="r1">
+			<transforms>
+				<transform type="translate" to="-0.5 -0.5 0.5" />
+            </transforms>
+			
+			<appearanceref id="inherit" />
+
+            <primitives>  
+             </primitives>
+               
+            <descendants>
+				<noderef id="r" />
+            </descendants>
+        </node>
+		
+		<node id="r2">
+			<transforms>
+				<transform type="translate" to="0.5 -0.5 -0.5" />
+				<transform type="rotate" axis="y" angle="180" />	
+            </transforms>
+			
+			<appearanceref id="inherit" />
+
+            <primitives>  
+             </primitives>
+               
+            <descendants>
+				<noderef id="r" />
+            </descendants>
+        </node>
+		
+		<node id="r3">
+			<transforms>
+				<transform type="translate" to="-0.5 0.5 0.5" />
+				<transform type="rotate" axis="x" angle="-90" />
+            </transforms>
+			
+			<appearanceref id="inherit" />
+
+            <primitives>  
+             </primitives>
+               
+            <descendants>
+				<noderef id="r" />
+            </descendants>
+        </node>
+		
+		<node id="r4">
+			<transforms>
+				<transform type="translate" to="-0.5 -0.5 -0.5" />
+				<transform type="rotate" axis="x" angle="90" />
+            </transforms>
+			
+			<appearanceref id="inherit" />
+
+            <primitives>  
+             </primitives>
+               
+            <descendants>
+				<noderef id="r" />
+            </descendants>
+        </node>
+		
+		<node id="r5">
+			<transforms>
+				<transform type="translate" to="0.5 -0.5 0.5" />
+				<transform type="rotate" axis="y" angle="90" />
+            </transforms>
+			
+			<appearanceref id="inherit" />
+
+            <primitives>  
+             </primitives>
+               
+            <descendants>
+				<noderef id="r" />
+            </descendants>
+        </node>
+		
+		<node id="r6">
+			<transforms>
+				<transform type="translate" to="-0.5 -0.5 -0.5" />
+				<transform type="rotate" axis="y" angle="-90" />
+            </transforms>
+			
+			<appearanceref id="inherit" />
+
+            <primitives>  
+             </primitives>
+               
+            <descendants>
+				<noderef id="r" />
+            </descendants>
+        </node>
+		
+		<node id="r">
+			<transforms>
+            </transforms>
+			
+			<appearanceref id="inherit" />
+
+            <primitives> 
+				 <rectangle xy1="0 0" xy2="1 1" />
+             </primitives>
+               
+            <descendants>
+            </descendants>
+        </node>
+    </graph>
+</anf>

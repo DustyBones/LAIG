@@ -1,0 +1,127 @@
+<anf>
+
+<animations>
+<!-- pode não existir qualquer nó “animation” se a cena não tiver animações -->
+<!-- span é o tempo, em segundos, que a animação deve demorar *
+<!-- nesta versão do formato ANF, type pode ter o valor “linear” ou "circular" -->
+      <!--<animation id="ss" span="3" type="linear" >
+            <controlpoint xx="0" yy="0" zz="0" />
+            <controlpoint xx="10" yy="10" zz="10" />
+            <controlpoint xx="0" yy="0" zz="0" />
+            <controlpoint xx="7" yy="0" zz="7" />
+            <controlpoint xx="7" yy="0" zz="0" />
+            <controlpoint xx="0" yy="5" zz="3" />
+      </animation>-->
+       <animation id="ss1" span="10" type="linear">
+            <controlpoint xx="0" yy="0" zz="0" />
+            <controlpoint xx="10" yy="10" zz="10" />
+            <controlpoint xx="0" yy="0" zz="0" />
+            <controlpoint xx="7" yy="0" zz="7" />
+            <controlpoint xx="7" yy="0" zz="0" />
+            <controlpoint xx="0" yy="5" zz="3" />
+      </animation>
+      <animation id="ss" span="10" type="circular" center="0 0 0" radius="5" startang="0" rotang="360" loop="true" />
+      <!--<animation id=”ss” span=”ff” type=”circular” center="ff ff ff" radius="ff" startang="ff" rotang="ff" /> -->
+</animations>
+
+
+	<globals>
+		<drawing mode="fill" shading="gouraud" background="0 0 0 0" />
+		<culling face="back" order="ccw" />
+		<lighting doublesided="true" local="false" enabled="true" ambient="0.2 0.2 0.2 0.2" />
+	</globals>
+
+	<cameras initial="perspective">
+		<perspective id="perspective" near="-10" far="100" angle="45" pos="100.0 100.0 100.0" target="0.0 5.0 0.0" />
+		<ortho id="top" direction="y" near="-50.0" far="100.0" left="-100.0" right="100.0" top="100" bottom="-100" />
+    	<ortho id="front" direction="z" near="-50.0" far="100.0" left="-100.0" right="100.0" top="100.0" bottom="-100.0" />
+		</cameras>
+
+
+	<lights>
+            <!-- Deve existir pelo menos uma luz declarada -->
+            <!-- Atributo "marker" indica se deve ou nao desenhar-se uma esfera representativa -->
+          	 <light id="L1" type="omni" enabled="true" marker="false" pos="0 5 0" >
+               <component type="ambient" value="0.0 0.0 0.0 0.1" />
+               <component type="diffuse" value="1 1 1 1" />
+               <component type="specular" value="0.0 0.8 1.0 0.4" />
+
+            </light>
+
+
+			<light id="sunR" type="spot" enabled="true" marker="false" pos="0 -500 0" target="0 5 0" angle="4" exponent="100.0">
+               <component type="ambient" value="0.0 0.0 0.0 0.1" />
+               <component type="diffuse" value="1.0 1.0 1.0 1.0" />
+               <component type="specular" value="0.0 0.0 0.0 0.4"/>
+           </light>
+
+           <light id="sunL" type="spot" enabled="true" marker="false" pos="0 500 0" target="0.5 0 0.5" angle="4" exponent="100.0">
+               <component type="ambient" value="0.0 0.0 0.0 0.1" />
+               <component type="diffuse" value="1.0 1.0 1.0 1.0" />
+               <component type="specular" value="0.0 0.0 0.0 0.4"/>
+           </light>
+           <light id="ovniLight" type="spot" enabled="true" marker="false" pos="42 10 0" target="42 5 0" angle="45" exponent="100.0">
+               <component type="ambient" value="0.0 0.0 0.0 0.1" />
+               <component type="diffuse" value="1.0 0.0 1.0 1.0" />
+               <component type="specular" value="0.0 0.0 0.0 0.4"/>
+           </light>
+       </lights>
+
+
+
+	<appearances>
+		<appearance id="FoguetaoAp" shininess="0.8">
+			<component type="ambient" value="1.0 1.0 1.0 1.0" />
+			<component type="diffuse" value="1.0 1.0 1.0 1.0" />
+			<component type="specular" value="1.0 1.0 1.0 1.0" />
+		</appearance>
+
+	</appearances>
+
+
+	<graph rootid="1">
+
+		<node id="1">
+
+      <animationref id="ss" />
+      <!--<animationref id="ss1" />-->
+			<transforms>
+			</transforms>
+
+			<appearanceref id="FoguetaoAp" />
+
+			<primitives>
+				 <plane parts="10" />
+		<!--		--><patch order="3" partsU="5" partsV="5" compute="fill">
+            		<controlpoint x="0" y="0" z="0" />
+            		<controlpoint x="1" y="1" z="0" />
+            		<controlpoint x="3" y="5" z="0" />
+            		<controlpoint x="6.7" y="-1" z="0" />
+
+            		<controlpoint x="0" y="0" z="1" />
+            		<controlpoint x="2" y="2" z="3" />
+            		<controlpoint x="4" y="5" z="7" />
+            		<controlpoint x="8" y="10" z="9" />
+
+
+            		<controlpoint x="0" y="0" z="5" />
+            		<controlpoint x="5" y="-3" z="7" />
+            		<controlpoint x="12" y="0" z="8" />
+            		<controlpoint x="12" y="0" z="11" />
+
+            		<controlpoint x="0" y="4" z="10" />
+            		<controlpoint x="4" y="6" z="11" />
+            		<controlpoint x="7" y="8" z="14" />
+            		<controlpoint x="10" y="10" z="17" />
+
+            	</patch>
+			</primitives>
+
+			<descendants>
+			</descendants>
+
+		</node>
+
+
+	</graph>
+</anf>
