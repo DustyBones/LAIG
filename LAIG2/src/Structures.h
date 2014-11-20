@@ -101,7 +101,7 @@ class Animation {
 public:
 	string id;
 	float start_time, current_time, span;
-	virtual void init(unsigned int t)=0;
+	virtual void init()=0;
 	virtual void update(unsigned int t)=0;
 	virtual void apply()=0;
 };
@@ -110,8 +110,8 @@ class LinearAnimation: public Animation{
 public:
 	vector< vector<float> > controlPoint;
 	float total_dist, current_dist, step_dist, v[3], ang,a;
-	void init(unsigned int t){
-		start_time=t;
+	void init(){
+		start_time=0;
 		total_dist=0;
 		for(size_t i=1; i<controlPoint.size(); ++i){
 			total_dist+=sqrt((controlPoint[i][0]-controlPoint[i-1][0])
@@ -138,12 +138,16 @@ public:
 class CircularAnimation: public Animation {
 public:
 	float center[3], radius, startang, rotang, step_angle, current_rotation_angle;
-	void init(unsigned int t){
-		start_time=t;
+	void init(){
+		start_time=0;
 		step_angle=rotang/(span*1000);
 	}
 	void update(unsigned int t){
-		current_time=t-start_time;
+		if(start_time==0){
+			start_time=t;
+		}else{
+			current_time=t-start_time;
+		}
 		current_rotation_angle=startang + current_time*step_angle;
 	}
 	void apply(){

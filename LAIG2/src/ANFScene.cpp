@@ -523,6 +523,11 @@ void ANFScene::init() {
 		}
 		++id;
 	}
+	//init animations
+	map<string, Animation*>::iterator it_anim;
+	for(it_anim=animations.begin();it_anim!=animations.end(); ++it_anim){
+		it_anim->second->init();
+	}
 
 	glEnable (GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
