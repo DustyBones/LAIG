@@ -214,6 +214,7 @@ ANFScene::ANFScene(char *filename) {
 			app.ap = new CGFappearance(ambient, specular, difuse, shininess);
 			if(app.textureref!=""){
 				app.ap->setTexture(textures[app.textureref].file);
+				app.ap->setTextureWrap(GL_REPEAT,GL_REPEAT);
 			}
 			appearances[app.id] = app;
 			appearance = appearance->NextSiblingElement();
@@ -424,18 +425,15 @@ ANFScene::ANFScene(char *filename) {
 							++i;
 							c=c->NextSiblingElement();
 						}
-						//Calculate Texture Coords
-						//TODO check this (patch texture coord)
-						for(int j=0; j<i/2; ++j){
-							p->texturePoint[j][0]=0.0;
-							p->texturePoint[j][1]=0.0+1/i*j;
-							p->texturePoint[j+i/2][0]=1.0;
-							p->texturePoint[j+i/2][1]=0.0+1/i*j;
-						}
 						node->primitives.push_back(p);
 						patches = patches->NextSiblingElement("patch");
 					}
-
+					TiXmlElement *flag = primitives->FirstChildElement("flag");
+					if(flag){
+						Flag* f= new Flag(flag->Attribute("texture"));
+						node->primitives.push_back(f);
+						flags.push_back(f);
+					}
 				}
 
 				TiXmlElement *descendants = nodeElement->FirstChildElement(
@@ -540,6 +538,9 @@ void ANFScene::update(unsigned long t){
 	map<string, Animation*>::iterator it_anim;
 	for(it_anim=animations.begin();it_anim!=animations.end(); ++it_anim){
 		it_anim->second->update(t);
+	}
+	for(size_t i=0; i<flags.size();++i){
+		flags[i]->update(t, 1);
 	}
 }
 

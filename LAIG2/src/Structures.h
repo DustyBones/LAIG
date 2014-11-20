@@ -254,12 +254,13 @@ class Patch: public Primitive {
 public:
 	int order, partsU, partsV;
 	string compute;
-	GLfloat controlPoint[16][3], texturePoint[16][2];
+	GLfloat controlPoint[16][3];
 	void draw(){
 		//init
+		float texturePoint[4][2]={{1.0,0.0},{0.0, 0.0},{1.0,1.0},{0.0, 1.0}};
 		int interpol = order+1;
 		glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3*interpol, interpol, 0.0, 1.0, 3, interpol, &controlPoint[0][0]);
-		glMap2f(GL_MAP2_TEXTURE_COORD_2, 0.0, 1.0, 2*interpol, interpol, 0.0, 1.0, 2, interpol, &texturePoint[0][0]);
+		glMap2f(GL_MAP2_TEXTURE_COORD_2, 0.0, 1.0, 4, interpol, 0.0, 1.0, 2, 2, &texturePoint[0][0]);
 
 		glEnable(GL_MAP2_VERTEX_3);
 		glEnable(GL_AUTO_NORMAL);
@@ -302,23 +303,29 @@ public:
 	Plane* p;
 	CGFtexture* t;
 	GLint timeLoc, windLoc, textureLoc;
-	unsigned int time;
+	unsigned int time, start;
 	int wind;
 	Flag(string text){
 		p=new Plane();
 		p->parts=100;
+		t = new CGFtexture("../data/"+text);
 		init("../data/flag.vert", "../data/flag.frag");
 		CGFshader::bind();
+		start=0;
 		time=0;
 		timeLoc = glGetUniformLocation(id(), "time");
 		wind=1;
 		windLoc = glGetUniformLocation(id(), "wind");
-		t = new CGFtexture("../data/"+text);
 		textureLoc = glGetUniformLocation(id(), "textureImage");
 		glUniform1i(textureLoc, 0);
+		CGFshader::unbind();
 	}
 	void update(unsigned int t, int w){
-		time=t;
+		if(start==0){
+			start=t;
+		}else{
+			time=t-start;
+		}
 		wind=w;
 	}
 
@@ -326,12 +333,14 @@ public:
 		CGFshader::bind();
 		// update uniforms
 		glUniform1i(timeLoc, time);
+		glUniform1i(windLoc, wind);
 
 		// make sure the correct texture unit is active
 		glActiveTexture(GL_TEXTURE0);
 
 		// apply/activate the texture you want, so that it is bound to GL_TEXTURE0
 		t->apply();
+
 		p->draw();
 		CGFshader::unbind();
 	}

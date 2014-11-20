@@ -36,7 +36,7 @@ public:
 	map<string, Appearance> appearances;
 	map<string, Animation*> animations;
 	Graph graph;
-
+	vector<Flag*> flags;
 	string initialCam, currentCam;
 	int wind;
 
