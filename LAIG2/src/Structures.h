@@ -1,9 +1,17 @@
 #ifndef STRUCTURES_H
 #define STRUCTURES_H
+
 #include <stdlib.h>
-#include "CGFshader.h"
-#include "CGFtexture.h"
+#include <GL/glew.h>
+#include <GL/gl.h>
+#include <GL/glut.h>
+#include <string>
+#include <vector>
+#include <map>
 #include <math.h>
+#include <CGFapplication.h>
+#include <CGFshader.h>
+#include <CGFtexture.h>
 
 class Drawing {
 public:
@@ -72,6 +80,7 @@ public:
 class Light {
 public:
 	string id, type;
+	float pos[3], target[3], angle, exponent, component[3][4];
 	bool enabled, marker;
 	CGFlight* light;
 };
@@ -128,7 +137,7 @@ public:
 
 class CircularAnimation: public Animation {
 public:
-	float center[3], radius, startang, rotang, step_angle, current_rotation_angle, current_rotation_arc[2];
+	float center[3], radius, startang, rotang, step_angle, current_rotation_angle;
 	void init(unsigned int t){
 		start_time=t;
 		step_angle=rotang/(span*1000);
@@ -136,15 +145,11 @@ public:
 	void update(unsigned int t){
 		current_time=t-start_time;
 		current_rotation_angle=startang + current_time*step_angle;
-		//current_rotation_arc[0]=center[0]+radius*cos(current_rotation_angle);
-		//current_rotation_arc[2]=center[3]+radius*sin(current_rotation_angle);
 	}
 	void apply(){
 		glTranslatef(center[0],center[1],center[2]);
 		glRotatef(current_rotation_angle, 0,1,0);
 		glTranslatef(-center[0],-center[1],-center[2]);
-
-	//	glTranslatef(current_rotation_arc[0],0.0,current_rotation_arc[2]);
 	}
 };
 
@@ -253,8 +258,8 @@ public:
 	void draw(){
 		//init
 		int interpol = order+1;
-		glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3, interpol, 0.0, 1.0, 6, interpol, &controlPoint[0][0]);
-		glMap2f(GL_MAP2_TEXTURE_COORD_2, 0.0, 1.0, 2, interpol, 0.0, 1.0, 4, interpol, &texturePoint[0][0]);
+		glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3*interpol, interpol, 0.0, 1.0, 3, interpol, &controlPoint[0][0]);
+		glMap2f(GL_MAP2_TEXTURE_COORD_2, 0.0, 1.0, 2*interpol, interpol, 0.0, 1.0, 2, interpol, &texturePoint[0][0]);
 
 		glEnable(GL_MAP2_VERTEX_3);
 		glEnable(GL_AUTO_NORMAL);
@@ -292,25 +297,29 @@ public:
 	}
 };
 
-class Flag: public Primitive, public CGFshader{
+class Flag: public Primitive, CGFshader{
 public:
 	Plane* p;
 	CGFtexture* t;
-	GLint timeLoc, textureLoc;
+	GLint timeLoc, windLoc, textureLoc;
 	unsigned int time;
+	int wind;
 	Flag(string text){
 		p=new Plane();
-		p->parts=10;
+		p->parts=100;
 		init("../data/flag.vert", "../data/flag.frag");
 		CGFshader::bind();
 		time=0;
 		timeLoc = glGetUniformLocation(id(), "time");
+		wind=1;
+		windLoc = glGetUniformLocation(id(), "wind");
 		t = new CGFtexture("../data/"+text);
 		textureLoc = glGetUniformLocation(id(), "textureImage");
 		glUniform1i(textureLoc, 0);
 	}
-	void update(unsigned int t){
+	void update(unsigned int t, int w){
 		time=t;
+		wind=w;
 	}
 
 	void bind(){

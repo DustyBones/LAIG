@@ -9,14 +9,14 @@ OUT = bin/LAIG2
 # include directories
 INCLUDES = -I. -I./include/  -I./include/CGF -I./include/TinyXML -I/usr/local/include
 
-# C++ compiler flags (-g -O2 -Wall)
+# C++ compiler flags (-g -O2 -Wall -M -H)
 CCFLAGS = -g -Wall
 
 # compiler
 CCC = g++
 
 # library paths
-LIBS = -Llib -L/usr/local/lib -L/usr/lib  -lCGF -lm -lglut -lglui -lGL -lGLU -lGLEW -ltinyxml
+LIBS = -Llib -L/usr/local/lib -L/usr/lib  -ltinyxml -lCGF -lglui -lGL -lglut -lGLU -lGLEW -lm
 
 # compile flags
 LDFLAGS = -g

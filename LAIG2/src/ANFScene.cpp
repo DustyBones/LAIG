@@ -1,8 +1,3 @@
-
-#include <GL/glew.h>
-#include <GL/gl.h>
-#include <GL/glut.h>
-
 #include "ANFScene.h"
 using namespace std;
 
@@ -123,42 +118,38 @@ ANFScene::ANFScene(char *filename) {
 	if (lightsElement) {
 		TiXmlElement *light = lightsElement->FirstChildElement();
 		TiXmlElement *lightComponent;
-		Light l;
-		float pos[3], component[4], target[3], angle,
-		exponent;
-		unsigned int id=0;
+		Light* l;
 		while (light) {
-			l.id = light->Attribute("id");
-			l.type = light->Attribute("type");
-			light->QueryBoolAttribute("enabled", &l.enabled);
-			light->QueryBoolAttribute("marker", &l.marker);
-			sscanf(light->Attribute("pos"), "%f %f %f", &pos[0], &pos[1], &pos[2]);
-			l.light = new CGFlight(id, pos);
-			if (l.type=="spot"){
-				sscanf(light->Attribute("target"), "%f %f %f", &target[0], &target[1], &target[2]);
-				light->QueryFloatAttribute("angle", &angle);
-				light->QueryFloatAttribute("exponent", &exponent);
-				glLightfv(id, GL_SPOT_DIRECTION, target);
-				glLightf(id, GL_SPOT_CUTOFF, angle);
-				glLightf(id, GL_SPOT_EXPONENT, exponent);
+			l= new Light();
+			l->id = light->Attribute("id");
+			l->type = light->Attribute("type");
+			light->QueryBoolAttribute("enabled", &l->enabled);
+			light->QueryBoolAttribute("marker", &l->marker);
+			sscanf(light->Attribute("pos"), "%f %f %f", &l->pos[0], &l->pos[1], &l->pos[2]);
+			if (l->type=="spot"){
+				sscanf(light->Attribute("target"), "%f %f %f", &l->target[0], &l->target[1], &l->target[2]);
+				light->QueryFloatAttribute("angle", &l->angle);
+				light->QueryFloatAttribute("exponent", &l->exponent);
 			}
-			++id;
 			lightComponent = light->FirstChildElement();
 			while (lightComponent) {
 				string type = lightComponent->Attribute("type");
-				sscanf(lightComponent->Attribute("value"), "%f %f %f %f",
-				&component[0], &component[1], &component[2],
-				&component[3]);
 				if ( type == "ambient") {
-					l.light->setAmbient(component);
-				} else if ( type == "diffuse") {
-					l.light->setDiffuse(component);
-				} else if (type == "specular") {
-					l.light->setSpecular(component);
+					sscanf(lightComponent->Attribute("value"), "%f %f %f %f",
+						&l->component[0][0], &l->component[0][1], &l->component[0][2],
+						&l->component[0][3]);
+			} else if ( type == "diffuse") {
+				sscanf(lightComponent->Attribute("value"), "%f %f %f %f",
+					&l->component[1][0], &l->component[1][1], &l->component[1][2],
+					&l->component[1][3]);
+			} else if (type == "specular") {
+				sscanf(lightComponent->Attribute("value"), "%f %f %f %f",
+					&l->component[2][0], &l->component[2][1], &l->component[2][2],
+					&l->component[2][3]);
 				}
 				lightComponent = lightComponent->NextSiblingElement();
 			}
-			lights[l.id] = l;
+			lights[l->id] = l;
 			light = light->NextSiblingElement();
 		}
 		printf("Lights block processed!\n");
@@ -265,7 +256,7 @@ ANFScene::ANFScene(char *filename) {
 				ca->id=animation->Attribute("id");
 				animation->QueryFloatAttribute("span", &ca->span);
 				sscanf(animation->Attribute("center"), "%f %f %f", &ca->center[0],
-					&ca->center[1], &ca->center[2]);
+				&ca->center[1], &ca->center[2]);
 				animation->QueryFloatAttribute("radius", &ca->radius);
 				animation->QueryFloatAttribute("startang", &ca->startang);
 				animation->QueryFloatAttribute("rotang", &ca->rotang);
@@ -405,37 +396,33 @@ ANFScene::ANFScene(char *filename) {
 						node->primitives.push_back(t);
 						torus = torus->NextSiblingElement("torus");
 					}
-
 					TiXmlElement *planes = primitives->FirstChildElement("plane");
 					while (planes){
 						Plane* p = new Plane();
+						planes->QueryIntAttribute("parts", &p->parts);
 						node->primitives.push_back(p);
+						planes = planes->NextSiblingElement("plane");
 					}
 
 					TiXmlElement *patches = primitives->FirstChildElement("patch");
 					while(patches){
 						Patch* p = new Patch();
+
 						patches->QueryIntAttribute("order", &p->order);
 						patches->QueryIntAttribute("partsU", &p->partsU);
 						patches->QueryIntAttribute("partsV", &p->partsV);
 						p->compute=patches->Attribute("compute");
 						int i=0;
-						GLfloat reverseControl[16][3];
 						TiXmlElement *c = patches->FirstChildElement();
 						while(c){
 							sscanf(c->Attribute("x"), "%f",
-							&reverseControl[i][0]);
+							&p->controlPoint[i][0]);
 							sscanf(c->Attribute("y"), "%f",
-							&reverseControl[i][1]);
+							&p->controlPoint[i][1]);
 							sscanf(c->Attribute("z"), "%f",
-							&reverseControl[i][2]);
+							&p->controlPoint[i][2]);
 							++i;
 							c=c->NextSiblingElement();
-						}
-						for(int j=i-1, k=0;k<i;--j, ++k){
-							p->controlPoint[k][0]=reverseControl[j][0];
-							p->controlPoint[k][1]=reverseControl[j][1];
-							p->controlPoint[k][2]=reverseControl[j][2];
 						}
 						//Calculate Texture Coords
 						//TODO check this (patch texture coord)
@@ -446,8 +433,9 @@ ANFScene::ANFScene(char *filename) {
 							p->texturePoint[j+i/2][1]=0.0+1/i*j;
 						}
 						node->primitives.push_back(p);
+						patches = patches->NextSiblingElement("patch");
 					}
-					//TODO vehicle
+
 				}
 
 				TiXmlElement *descendants = nodeElement->FirstChildElement(
@@ -522,6 +510,22 @@ void ANFScene::init() {
 		glFrontFace(GL_CCW);
 	}
 
+	//init lights
+	map<string, Light*>::iterator it;
+	for(it=lights.begin();it!=lights.end();++it){
+		unsigned int id=0;
+		it->second->light = new CGFlight(id, it->second->pos);
+		if(it->second->type=="spot"){
+			glLightfv(id, GL_SPOT_DIRECTION, it->second->target);
+			glLightf(id, GL_SPOT_CUTOFF, it->second->angle);
+			glLightf(id, GL_SPOT_EXPONENT, it->second->exponent);
+			it->second->light->setAmbient(it->second->component[0]);
+			it->second->light->setDiffuse(it->second->component[1]);
+			it->second->light->setSpecular(it->second->component[2]);
+		}
+		++id;
+	}
+
 	glEnable (GL_BLEND);
 	glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_NORMALIZE);
@@ -545,20 +549,21 @@ void ANFScene::display() {
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	cameras[initialCam]->apply();
+	//cameras[initialCam]->apply();
 	CGFapplication::activeApp->forceRefresh();
-  //CGFscene::activeCamera->applyView();
+	CGFscene::activeCamera->applyView();
 
-	map<string, Light>::iterator it;
+	map<string, Light*>::iterator it;
 	for(it=lights.begin(); it!=lights.end();++it){
 
-		if(it->second.marker){
-			it->second.light->draw();
+		if(it->second->marker){
+			it->second->light->draw();
 		}
-		if(it->second.enabled){
-			it->second.light->enable();
+			it->second->light->disable();
+		if(it->second->enabled){
+			it->second->light->enable();
 		}
-		it->second.light->update();
+		it->second->light->update();
 	}
 	axis.draw();
 	//-------------------------------
@@ -566,8 +571,6 @@ void ANFScene::display() {
 
 	glutSwapBuffers();
 }
-//cout<<it->first<<endl;
-//cin.ignore();
 
 void ANFScene::drawNode(Node* n) {
 	glPushMatrix();
@@ -576,6 +579,9 @@ void ANFScene::drawNode(Node* n) {
 		appearances[n->appearanceref].ap->apply();
 	}
 	glMultMatrixf(n->matrix);
+	for(size_t i=0; i<n->animationref.size(); ++i){
+		animations[n->animationref[i]]->apply();
+	}
 	for (size_t i = 0; i < n->primitives.size(); ++i) {
 		glPushMatrix();
 		n->primitives[i]->draw();

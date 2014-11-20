@@ -1,7 +1,7 @@
 #include <iostream>
 #include <exception>
 
-#include "CGFapplication.h"
+#include "Structures.h"
 #include "ANFScene.h"
 #include "ANFInterface.h"
 
@@ -20,8 +20,11 @@ int main(int argc, char* argv[]) {
 	try {
 		app.init(&argc, argv);
 
-		app.setScene(new ANFScene(argv[1]));
-		app.setInterface(new ANFInterface());
+		ANFScene* scene = new ANFScene(argv[1]);
+
+		app.setScene(scene);
+	//	app.setInterface(new ANFInterface(scene));
+	app.setInterface(new CGFinterface());
 
 		app.run();
 	} catch (GLexception& ex) {
