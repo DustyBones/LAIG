@@ -48,7 +48,7 @@ public:
 	float near, far, angle, pos[3], target[3];
 	void apply(){
 		float ratio = ((float) CGFapplication::width) /
-			((float) CGFapplication::height);
+		((float) CGFapplication::height);
 		glPushMatrix();
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -115,11 +115,11 @@ public:
 		total_dist=0;
 		for(size_t i=1; i<controlPoint.size(); ++i){
 			total_dist+=sqrt((controlPoint[i][0]-controlPoint[i-1][0])
-				*(controlPoint[i][0]-controlPoint[i-1][0])
-				+(controlPoint[i][1]-controlPoint[i-1][1])
-				*(controlPoint[i][1]-controlPoint[i-1][1])
-				+(controlPoint[i][2]-controlPoint[i-1][2])
-				*(controlPoint[i][2]-controlPoint[i-1][2]));
+			*(controlPoint[i][0]-controlPoint[i-1][0])
+			+(controlPoint[i][1]-controlPoint[i-1][1])
+			*(controlPoint[i][1]-controlPoint[i-1][1])
+			+(controlPoint[i][2]-controlPoint[i-1][2])
+			*(controlPoint[i][2]-controlPoint[i-1][2]));
 		}
 		current_dist=0;
 		step_dist= total_dist/(span*1000); //speed
@@ -264,7 +264,7 @@ public:
 		float texturePoint[4][2]={{1.0,0.0},{0.0, 0.0},{1.0,1.0},{0.0, 1.0}};
 		int interpol = order+1;
 		glMap2f(GL_MAP2_VERTEX_3, 0.0, 1.0, 3*interpol, interpol, 0.0, 1.0, 3, interpol, &controlPoint[0][0]);
-		glMap2f(GL_MAP2_TEXTURE_COORD_2, 0.0, 1.0, 4, interpol, 0.0, 1.0, 2, 2, &texturePoint[0][0]);
+		glMap2f(GL_MAP2_TEXTURE_COORD_2, 0.0, 1.0, 4, 2, 0.0, 1.0, 2, 2, &texturePoint[0][0]);
 
 		glEnable(GL_MAP2_VERTEX_3);
 		glEnable(GL_AUTO_NORMAL);
@@ -287,17 +287,558 @@ public:
 
 class Vehicle: public Primitive{
 public:
-	vector<Plane*> planes;
-	vector<Patch*> patches;
+	vector<Primitive*> parts;
 	Vehicle(){
-		;
+
+		string draw_mode="fill";
+		int p=25;
+		Patch* patch_part;
+		//**********************************************************************
+		//*******************************front**********************************
+		//**********************************************************************
+		patch_part = new Patch();
+		patch_part->order=3;
+		patch_part->partsU=p;
+		patch_part->partsV=p;
+		patch_part->compute=draw_mode;
+		//**********************************************
+		patch_part->controlPoint[0][0]=0.4;
+		patch_part->controlPoint[0][1]=0.4;
+		patch_part->controlPoint[0][2]=1;
+
+		patch_part->controlPoint[1][0]=0.5;
+		patch_part->controlPoint[1][1]=0.3;
+		patch_part->controlPoint[1][2]=1;
+
+		patch_part->controlPoint[2][0]=0.5;
+		patch_part->controlPoint[2][1]=-0.3;
+		patch_part->controlPoint[2][2]=1;
+
+		patch_part->controlPoint[3][0]=0.4;
+		patch_part->controlPoint[3][1]=-0.4;
+		patch_part->controlPoint[3][2]=1;
+		//*****************************************
+		patch_part->controlPoint[4][0]=0.3;
+		patch_part->controlPoint[4][1]=0.5;
+		patch_part->controlPoint[4][2]=1;
+
+		patch_part->controlPoint[5][0]=0.3;
+		patch_part->controlPoint[5][1]=0.4;
+		patch_part->controlPoint[5][2]=1.5;
+
+		patch_part->controlPoint[6][0]=0.3;
+		patch_part->controlPoint[6][1]=-0.4;
+		patch_part->controlPoint[6][2]=1.5;
+
+		patch_part->controlPoint[7][0]=0.3;
+		patch_part->controlPoint[7][1]=-0.5;
+		patch_part->controlPoint[7][2]=1;
+		//****************************************
+		patch_part->controlPoint[8][0]=-0.3;
+		patch_part->controlPoint[8][1]=0.5;
+		patch_part->controlPoint[8][2]=1;
+
+		patch_part->controlPoint[9][0]=-0.3;
+		patch_part->controlPoint[9][1]=0.4;
+		patch_part->controlPoint[9][2]=1.5;
+
+		patch_part->controlPoint[10][0]=-0.3;
+		patch_part->controlPoint[10][1]=-0.4;
+		patch_part->controlPoint[10][2]=1.5;
+
+		patch_part->controlPoint[11][0]=-0.3;
+		patch_part->controlPoint[11][1]=-0.5;
+		patch_part->controlPoint[11][2]=1;
+		//******************************************
+		patch_part->controlPoint[12][0]=-0.4;
+		patch_part->controlPoint[12][1]=0.4;
+		patch_part->controlPoint[12][2]=1;
+
+		patch_part->controlPoint[13][0]=-0.5;
+		patch_part->controlPoint[13][1]=0.3;
+		patch_part->controlPoint[13][2]=1;
+
+		patch_part->controlPoint[14][0]=-0.5;
+		patch_part->controlPoint[14][1]=-0.3;
+		patch_part->controlPoint[14][2]=1;
+
+		patch_part->controlPoint[15][0]=-0.4;
+		patch_part->controlPoint[15][1]=-0.4;
+		patch_part->controlPoint[15][2]=1;
+
+		parts.push_back(patch_part);
+
+		//**********************************************************************
+		//*******************************back**********************************
+		//**********************************************************************
+		patch_part = new Patch();
+		patch_part->order=3;
+		patch_part->partsU=p;
+		patch_part->partsV=p;
+		patch_part->compute=draw_mode;
+		//**********************************************
+		patch_part->controlPoint[0][0]=-0.4;
+		patch_part->controlPoint[0][1]=0.4;
+		patch_part->controlPoint[0][2]=-0.5;
+
+		patch_part->controlPoint[1][0]=-0.5;
+		patch_part->controlPoint[1][1]=0.3;
+		patch_part->controlPoint[1][2]=-0.5;
+
+		patch_part->controlPoint[2][0]=-0.5;
+		patch_part->controlPoint[2][1]=-0.3;
+		patch_part->controlPoint[2][2]=-0.5;
+
+		patch_part->controlPoint[3][0]=-0.4;
+		patch_part->controlPoint[3][1]=-0.4;
+		patch_part->controlPoint[3][2]=-0.5;
+		//*****************************************
+		patch_part->controlPoint[4][0]=-0.3;
+		patch_part->controlPoint[4][1]=0.5;
+		patch_part->controlPoint[4][2]=-0.5;
+
+		patch_part->controlPoint[5][0]=-0.3;
+		patch_part->controlPoint[5][1]=0.4;
+		patch_part->controlPoint[5][2]=-0.4;
+
+		patch_part->controlPoint[6][0]=-0.3;
+		patch_part->controlPoint[6][1]=-0.4;
+		patch_part->controlPoint[6][2]=-0.4;
+
+		patch_part->controlPoint[7][0]=-0.3;
+		patch_part->controlPoint[7][1]=-0.5;
+		patch_part->controlPoint[7][2]=-0.5;
+		//****************************************
+		patch_part->controlPoint[8][0]=0.3;
+		patch_part->controlPoint[8][1]=0.5;
+		patch_part->controlPoint[8][2]=-0.5;
+
+		patch_part->controlPoint[9][0]=0.3;
+		patch_part->controlPoint[9][1]=0.4;
+		patch_part->controlPoint[9][2]=-0.4;
+
+		patch_part->controlPoint[10][0]=0.3;
+		patch_part->controlPoint[10][1]=-0.4;
+		patch_part->controlPoint[10][2]=-0.4;
+
+		patch_part->controlPoint[11][0]=0.3;
+		patch_part->controlPoint[11][1]=-0.5;
+		patch_part->controlPoint[11][2]=-0.5;
+		//******************************************
+		patch_part->controlPoint[12][0]=0.4;
+		patch_part->controlPoint[12][1]=0.4;
+		patch_part->controlPoint[12][2]=-0.5;
+
+		patch_part->controlPoint[13][0]=0.5;
+		patch_part->controlPoint[13][1]=0.3;
+		patch_part->controlPoint[13][2]=-0.5;
+
+		patch_part->controlPoint[14][0]=0.5;
+		patch_part->controlPoint[14][1]=-0.3;
+		patch_part->controlPoint[14][2]=-0.5;
+
+		patch_part->controlPoint[15][0]=0.4;
+		patch_part->controlPoint[15][1]=-0.4;
+		patch_part->controlPoint[15][2]=-0.5;
+
+		parts.push_back(patch_part);
+		//**********************************************************************
+		//*******************************top************************************
+		//**********************************************************************
+		patch_part = new Patch();
+		patch_part->order=3;
+		patch_part->partsU=p;
+		patch_part->partsV=p;
+		patch_part->compute=draw_mode;
+		//*********************************************
+		patch_part->controlPoint[0][0]=0.4;
+		patch_part->controlPoint[0][1]=0.4;
+		patch_part->controlPoint[0][2]=-0.5;
+
+		patch_part->controlPoint[1][0]=0.4;
+		patch_part->controlPoint[1][1]=0.4;
+		patch_part->controlPoint[1][2]=0;
+
+		patch_part->controlPoint[2][0]=0.4;
+		patch_part->controlPoint[2][1]=0.4;
+		patch_part->controlPoint[2][2]=0.5;
+
+		patch_part->controlPoint[3][0]=0.4;
+		patch_part->controlPoint[3][1]=0.4;
+		patch_part->controlPoint[3][2]=1;
+		//*****************************************
+		patch_part->controlPoint[4][0]=0.3;
+		patch_part->controlPoint[4][1]=0.5;
+		patch_part->controlPoint[4][2]=-0.5;
+
+		patch_part->controlPoint[5][0]=0.3;
+		patch_part->controlPoint[5][1]=0.5;
+		patch_part->controlPoint[5][2]=0;
+
+		patch_part->controlPoint[6][0]=0.3;
+		patch_part->controlPoint[6][1]=0.5;
+		patch_part->controlPoint[6][2]=0.5;
+
+		patch_part->controlPoint[7][0]=0.3;
+		patch_part->controlPoint[7][1]=0.5;
+		patch_part->controlPoint[7][2]=1;
+		//****************************************
+		patch_part->controlPoint[8][0]=-0.3;
+		patch_part->controlPoint[8][1]=0.5;
+		patch_part->controlPoint[8][2]=-0.5;
+
+		patch_part->controlPoint[9][0]=-0.3;
+		patch_part->controlPoint[9][1]=0.5;
+		patch_part->controlPoint[9][2]=0;
+
+		patch_part->controlPoint[10][0]=-0.3;
+		patch_part->controlPoint[10][1]=0.5;
+		patch_part->controlPoint[10][2]=0.5;
+
+		patch_part->controlPoint[11][0]=-0.3;
+		patch_part->controlPoint[11][1]=0.5;
+		patch_part->controlPoint[11][2]=1;
+		//******************************************
+		patch_part->controlPoint[12][0]=-0.4;
+		patch_part->controlPoint[12][1]=0.4;
+		patch_part->controlPoint[12][2]=-0.5;
+
+		patch_part->controlPoint[13][0]=-0.4;
+		patch_part->controlPoint[13][1]=0.4;
+		patch_part->controlPoint[13][2]=0;
+
+		patch_part->controlPoint[14][0]=-0.4;
+		patch_part->controlPoint[14][1]=0.4;
+		patch_part->controlPoint[14][2]=0.5;
+
+		patch_part->controlPoint[15][0]=-0.4;
+		patch_part->controlPoint[15][1]=0.4;
+		patch_part->controlPoint[15][2]=1;
+
+		parts.push_back(patch_part);
+
+		//**********************************************************************
+		//*******************************bot************************************
+		//**********************************************************************
+		patch_part = new Patch();
+		patch_part->order=3;
+		patch_part->partsU=p;
+		patch_part->partsV=p;
+		patch_part->compute=draw_mode;
+		//*********************************************
+		patch_part->controlPoint[0][0]=0.4;
+		patch_part->controlPoint[0][1]=-0.4;
+		patch_part->controlPoint[0][2]=1;
+
+		patch_part->controlPoint[1][0]=0.4;
+		patch_part->controlPoint[1][1]=-0.4;
+		patch_part->controlPoint[1][2]=0.5;
+
+		patch_part->controlPoint[2][0]=0.4;
+		patch_part->controlPoint[2][1]=-0.4;
+		patch_part->controlPoint[2][2]=0;
+
+		patch_part->controlPoint[3][0]=0.4;
+		patch_part->controlPoint[3][1]=-0.4;
+		patch_part->controlPoint[3][2]=-0.5;
+		//*****************************************
+		patch_part->controlPoint[4][0]=0.3;
+		patch_part->controlPoint[4][1]=-0.5;
+		patch_part->controlPoint[4][2]=1;
+
+		patch_part->controlPoint[5][0]=0.3;
+		patch_part->controlPoint[5][1]=-0.5;
+		patch_part->controlPoint[5][2]=0.5;
+
+		patch_part->controlPoint[6][0]=0.3;
+		patch_part->controlPoint[6][1]=-0.5;
+		patch_part->controlPoint[6][2]=0;
+
+		patch_part->controlPoint[7][0]=0.3;
+		patch_part->controlPoint[7][1]=-0.5;
+		patch_part->controlPoint[7][2]=-0.5;
+		//****************************************
+		patch_part->controlPoint[8][0]=-0.3;
+		patch_part->controlPoint[8][1]=-0.5;
+		patch_part->controlPoint[8][2]=1;
+
+		patch_part->controlPoint[9][0]=-0.3;
+		patch_part->controlPoint[9][1]=-0.5;
+		patch_part->controlPoint[9][2]=0.5;
+
+		patch_part->controlPoint[10][0]=-0.3;
+		patch_part->controlPoint[10][1]=-0.5;
+		patch_part->controlPoint[10][2]=0;
+
+		patch_part->controlPoint[11][0]=-0.3;
+		patch_part->controlPoint[11][1]=-0.5;
+		patch_part->controlPoint[11][2]=-0.5;
+		//******************************************
+		patch_part->controlPoint[12][0]=-0.4;
+		patch_part->controlPoint[12][1]=-0.4;
+		patch_part->controlPoint[12][2]=1;
+
+		patch_part->controlPoint[13][0]=-0.4;
+		patch_part->controlPoint[13][1]=-0.4;
+		patch_part->controlPoint[13][2]=0.5;
+
+		patch_part->controlPoint[14][0]=-0.4;
+		patch_part->controlPoint[14][1]=-0.4;
+		patch_part->controlPoint[14][2]=0;
+
+		patch_part->controlPoint[15][0]=-0.4;
+		patch_part->controlPoint[15][1]=-0.4;
+		patch_part->controlPoint[15][2]=-0.5;
+
+		parts.push_back(patch_part);
+
+		//**********************************************************************
+		//*******************************left**********************************
+		//**********************************************************************
+		patch_part = new Patch();
+		patch_part->order=3;
+		patch_part->partsU=p;
+		patch_part->partsV=p;
+		patch_part->compute=draw_mode;
+		//***********************************
+		patch_part->controlPoint[0][0]=0.4;
+		patch_part->controlPoint[0][1]=0.4;
+		patch_part->controlPoint[0][2]=1;
+
+		patch_part->controlPoint[1][0]=0.4;
+		patch_part->controlPoint[1][1]=0.4;
+		patch_part->controlPoint[1][2]=0.5;
+
+		patch_part->controlPoint[2][0]=0.4;
+		patch_part->controlPoint[2][1]=0.4;
+		patch_part->controlPoint[2][2]=0;
+
+		patch_part->controlPoint[3][0]=0.4;
+		patch_part->controlPoint[3][1]=0.4;
+		patch_part->controlPoint[3][2]=-0.5;
+		//*****************************************
+		patch_part->controlPoint[4][0]=0.5;
+		patch_part->controlPoint[4][1]=0.3;
+		patch_part->controlPoint[4][2]=1;
+
+		patch_part->controlPoint[5][0]=0.5;
+		patch_part->controlPoint[5][1]=0.3;
+		patch_part->controlPoint[5][2]=0.5;
+
+		patch_part->controlPoint[6][0]=0.5;
+		patch_part->controlPoint[6][1]=0.3;
+		patch_part->controlPoint[6][2]=0;
+
+		patch_part->controlPoint[7][0]=0.5;
+		patch_part->controlPoint[7][1]=0.3;
+		patch_part->controlPoint[7][2]=-0.5;
+		//****************************************
+		patch_part->controlPoint[8][0]=0.5;
+		patch_part->controlPoint[8][1]=-0.3;
+		patch_part->controlPoint[8][2]=1;
+
+		patch_part->controlPoint[9][0]=0.5;
+		patch_part->controlPoint[9][1]=-0.3;
+		patch_part->controlPoint[9][2]=0.5;
+
+		patch_part->controlPoint[10][0]=0.5;
+		patch_part->controlPoint[10][1]=-0.3;
+		patch_part->controlPoint[10][2]=0;
+
+		patch_part->controlPoint[11][0]=0.5;
+		patch_part->controlPoint[11][1]=-0.3;
+		patch_part->controlPoint[11][2]=-0.5;
+		//******************************************
+		patch_part->controlPoint[12][0]=0.4;
+		patch_part->controlPoint[12][1]=-0.4;
+		patch_part->controlPoint[12][2]=1;
+
+		patch_part->controlPoint[13][0]=0.4;
+		patch_part->controlPoint[13][1]=-0.4;
+		patch_part->controlPoint[13][2]=0.5;
+
+		patch_part->controlPoint[14][0]=0.4;
+		patch_part->controlPoint[14][1]=-0.4;
+		patch_part->controlPoint[14][2]=0;
+
+		patch_part->controlPoint[15][0]=0.4;
+		patch_part->controlPoint[15][1]=-0.4;
+		patch_part->controlPoint[15][2]=-0.5;
+
+		parts.push_back(patch_part);
+
+		//**********************************************************************
+		//*******************************right**********************************
+		//**********************************************************************
+		patch_part = new Patch();
+		patch_part->order=3;
+		patch_part->partsU=p;
+		patch_part->partsV=p;
+		patch_part->compute=draw_mode;
+		//***********************************
+		patch_part->controlPoint[0][0]=-0.4;
+		patch_part->controlPoint[0][1]=0.4;
+		patch_part->controlPoint[0][2]=-0.5;
+
+		patch_part->controlPoint[1][0]=-0.4;
+		patch_part->controlPoint[1][1]=0.4;
+		patch_part->controlPoint[1][2]=0;
+
+		patch_part->controlPoint[2][0]=-0.4;
+		patch_part->controlPoint[2][1]=0.4;
+		patch_part->controlPoint[2][2]=0.5;
+
+		patch_part->controlPoint[3][0]=-0.4;
+		patch_part->controlPoint[3][1]=0.4;
+		patch_part->controlPoint[3][2]=1;
+		//*****************************************
+		patch_part->controlPoint[4][0]=-0.5;
+		patch_part->controlPoint[4][1]=0.3;
+		patch_part->controlPoint[4][2]=-0.5;
+
+		patch_part->controlPoint[5][0]=-0.5;
+		patch_part->controlPoint[5][1]=0.3;
+		patch_part->controlPoint[5][2]=0;
+
+		patch_part->controlPoint[6][0]=-0.5;
+		patch_part->controlPoint[6][1]=0.3;
+		patch_part->controlPoint[6][2]=0.5;
+
+		patch_part->controlPoint[7][0]=-0.5;
+		patch_part->controlPoint[7][1]=0.3;
+		patch_part->controlPoint[7][2]=1;
+		//****************************************
+		patch_part->controlPoint[8][0]=-0.5;
+		patch_part->controlPoint[8][1]=-0.3;
+		patch_part->controlPoint[8][2]=-0.5;
+
+		patch_part->controlPoint[9][0]=-0.5;
+		patch_part->controlPoint[9][1]=-0.3;
+		patch_part->controlPoint[9][2]=0;
+
+		patch_part->controlPoint[10][0]=-0.5;
+		patch_part->controlPoint[10][1]=-0.3;
+		patch_part->controlPoint[10][2]=0.5;
+
+		patch_part->controlPoint[11][0]=-0.5;
+		patch_part->controlPoint[11][1]=-0.3;
+		patch_part->controlPoint[11][2]=1;
+		//******************************************
+		patch_part->controlPoint[12][0]=-0.4;
+		patch_part->controlPoint[12][1]=-0.4;
+		patch_part->controlPoint[12][2]=-0.5;
+
+		patch_part->controlPoint[13][0]=-0.4;
+		patch_part->controlPoint[13][1]=-0.4;
+		patch_part->controlPoint[13][2]=0;
+
+		patch_part->controlPoint[14][0]=-0.4;
+		patch_part->controlPoint[14][1]=-0.4;
+		patch_part->controlPoint[14][2]=0.5;
+
+		patch_part->controlPoint[15][0]=-0.4;
+		patch_part->controlPoint[15][1]=-0.4;
+		patch_part->controlPoint[15][2]=1;
+
+		parts.push_back(patch_part);
+
+		//**********************************************************************
+		//****************************left wing********************************
+		//**********************************************************************
+		patch_part = new Patch();
+		patch_part->order=2;
+		patch_part->partsU=p;
+		patch_part->partsV=p;
+		patch_part->compute=draw_mode;
+		//***********************************
+		patch_part->controlPoint[0][0]=0.4;
+		patch_part->controlPoint[0][1]=0;
+		patch_part->controlPoint[0][2]=-0.4;
+
+		patch_part->controlPoint[1][0]=0.8;
+		patch_part->controlPoint[1][1]=0;
+		patch_part->controlPoint[1][2]=-0.4;
+
+		patch_part->controlPoint[2][0]=1.2;
+		patch_part->controlPoint[2][1]=0;
+		patch_part->controlPoint[2][2]=-0.8;
+		//*****************************************
+		patch_part->controlPoint[3][0]=0.4;
+		patch_part->controlPoint[3][1]=0;
+		patch_part->controlPoint[3][2]=-0.4;
+
+		patch_part->controlPoint[4][0]=0.8;
+		patch_part->controlPoint[4][1]=0;
+		patch_part->controlPoint[4][2]=0;
+
+		patch_part->controlPoint[5][0]=1.2;
+		patch_part->controlPoint[5][1]=0;
+		patch_part->controlPoint[5][2]=0.4;
+		//****************************************
+		patch_part->controlPoint[6][0]=0.4;
+		patch_part->controlPoint[6][1]=0;
+		patch_part->controlPoint[6][2]=-0.4;
+
+		patch_part->controlPoint[7][0]=0.4;
+		patch_part->controlPoint[7][1]=0;
+		patch_part->controlPoint[7][2]=0;
+
+		patch_part->controlPoint[8][0]=0.4;
+		patch_part->controlPoint[8][1]=0;
+		patch_part->controlPoint[8][2]=0.4;
+
+		parts.push_back(patch_part);
+
+		//**********************************************************************
+		//****************************right wing********************************
+		//**********************************************************************
+		patch_part = new Patch();
+		patch_part->order=2;
+		patch_part->partsU=p;
+		patch_part->partsV=p;
+		patch_part->compute=draw_mode;
+		//****************************************
+		patch_part->controlPoint[6][0]=-0.4;
+		patch_part->controlPoint[6][1]=0;
+		patch_part->controlPoint[6][2]=0.4;
+
+		patch_part->controlPoint[7][0]=-0.4;
+		patch_part->controlPoint[7][1]=0;
+		patch_part->controlPoint[7][2]=0;
+
+		patch_part->controlPoint[8][0]=-0.4;
+		patch_part->controlPoint[8][1]=0;
+		patch_part->controlPoint[8][2]=-0.4;
+		//*****************************************
+		patch_part->controlPoint[3][0]=-1.2;
+		patch_part->controlPoint[3][1]=0;
+		patch_part->controlPoint[3][2]=0.4;
+
+		patch_part->controlPoint[4][0]=-0.8;
+		patch_part->controlPoint[4][1]=0;
+		patch_part->controlPoint[4][2]=0;
+
+		patch_part->controlPoint[5][0]=-0.4;
+		patch_part->controlPoint[5][1]=0;
+		patch_part->controlPoint[5][2]=-0.4;
+		//***********************************
+		patch_part->controlPoint[0][0]=-1.2;
+		patch_part->controlPoint[0][1]=0;
+		patch_part->controlPoint[0][2]=-0.8;
+
+		patch_part->controlPoint[1][0]=-0.8;
+		patch_part->controlPoint[1][1]=0;
+		patch_part->controlPoint[1][2]=-0.4;
+
+		patch_part->controlPoint[2][0]=-0.4;
+		patch_part->controlPoint[2][1]=0;
+		patch_part->controlPoint[2][2]=-0.4;
+
+		parts.push_back(patch_part);
 	}
 	void draw(){
-		for(size_t i=0; i<planes.size(); ++i){
-			planes[i]->draw();
-		}
-		for(size_t i=0; i<patches.size(); ++i){
-			planes[i]->draw();
+		for(size_t i=0; i<parts.size(); ++i){
+			parts[i]->draw();
 		}
 	}
 };

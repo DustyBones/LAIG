@@ -136,14 +136,14 @@ ANFScene::ANFScene(char *filename) {
 				string type = lightComponent->Attribute("type");
 				if ( type == "ambient") {
 					sscanf(lightComponent->Attribute("value"), "%f %f %f %f",
-						&l->component[0][0], &l->component[0][1], &l->component[0][2],
-						&l->component[0][3]);
-			} else if ( type == "diffuse") {
-				sscanf(lightComponent->Attribute("value"), "%f %f %f %f",
+					&l->component[0][0], &l->component[0][1], &l->component[0][2],
+					&l->component[0][3]);
+				} else if ( type == "diffuse") {
+					sscanf(lightComponent->Attribute("value"), "%f %f %f %f",
 					&l->component[1][0], &l->component[1][1], &l->component[1][2],
 					&l->component[1][3]);
-			} else if (type == "specular") {
-				sscanf(lightComponent->Attribute("value"), "%f %f %f %f",
+				} else if (type == "specular") {
+					sscanf(lightComponent->Attribute("value"), "%f %f %f %f",
 					&l->component[2][0], &l->component[2][1], &l->component[2][2],
 					&l->component[2][3]);
 				}
@@ -166,6 +166,8 @@ ANFScene::ANFScene(char *filename) {
 			t.id = texture->Attribute("id");
 			file_name=texture->Attribute("file");
 			t.file = "../data/"+file_name;
+			t.length_s=1;
+			t.length_t=1;
 			texture->QueryFloatAttribute("texlength_s", &t.length_s);
 			texture->QueryFloatAttribute("texlength_t", &t.length_t);
 
@@ -434,6 +436,10 @@ ANFScene::ANFScene(char *filename) {
 						node->primitives.push_back(f);
 						flags.push_back(f);
 					}
+					TiXmlElement *vehicle = primitives->FirstChildElement("vehicle");
+					if(vehicle){
+						node->primitives.push_back(new Vehicle());
+					}
 				}
 
 				TiXmlElement *descendants = nodeElement->FirstChildElement(
@@ -453,6 +459,7 @@ ANFScene::ANFScene(char *filename) {
 	} else {
 		printf("Graph block not found!\n");
 	}
+	wind=5;
 }
 
 void ANFScene::init() {
@@ -545,7 +552,7 @@ void ANFScene::update(unsigned long t){
 		it_anim->second->update(t);
 	}
 	for(size_t i=0; i<flags.size();++i){
-		flags[i]->update(t, 1);
+		flags[i]->update(t, wind);
 	}
 }
 
@@ -565,7 +572,7 @@ void ANFScene::display() {
 		if(it->second->marker){
 			it->second->light->draw();
 		}
-			it->second->light->disable();
+		it->second->light->disable();
 		if(it->second->enabled){
 			it->second->light->enable();
 		}
@@ -580,14 +587,14 @@ void ANFScene::display() {
 
 void ANFScene::drawNode(Node* n) {
 	glPushMatrix();
-
-	if ((n->appearanceref != "inherit") && (n->appearanceref != "")){
-		appearances[n->appearanceref].ap->apply();
-	}
-	glMultMatrixf(n->matrix);
 	for(size_t i=0; i<n->animationref.size(); ++i){
 		animations[n->animationref[i]]->apply();
 	}
+	if ((n->appearanceref != "inherit") && (n->appearanceref != "")){
+		appearances[n->appearanceref].ap->apply();
+	}
+
+	glMultMatrixf(n->matrix);
 	for (size_t i = 0; i < n->primitives.size(); ++i) {
 		glPushMatrix();
 		n->primitives[i]->draw();

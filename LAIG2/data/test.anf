@@ -1,15 +1,4 @@
 <anf>
-
-  <animations>
-    <!-- pode não existir qualquer nó “animation” se a cena não tiver animações -->
-    <!-- span é o tempo, em segundos, que a animação deve demorar *
-    <!-- nesta versão do formato ANF, type pode ter o valor “linear” ou "circular" -->
-
-    <animation id="circle" span="10" type="circular" center="0 0 0" radius="5" startang="0" rotang="360" />
-    <!--<animation id=”ss” span=”ff” type=”circular” center="ff ff ff" radius="ff" startang="ff" rotang="ff" /> -->
-  </animations>
-
-
   <globals>
     <drawing mode="fill" shading="gouraud" background="0 0.1 0.3 1" />
     <culling face="back" order="ccw" />
@@ -37,7 +26,6 @@
   <textures>
     <texture id="mountain_texture_1" file="9612-mountain.png" texlength_s="1" texlength_t="1" />
     <texture id="mountain_texture_2" file="mountain.jpg" texlength_s="1" texlength_t="1" />
-    <texture id="metal_texture_1" file="metal.jpg" texlength_s="1" texlength_t="1" />
     <texture id="camo_texture_1" file="camo.png" texlength_s="1" texlength_t="1" />
     <texture id="camo_texture_2" file="camo2.png" texlength_s="1" texlength_t="1" />
   </textures>
@@ -48,7 +36,7 @@
       <component type="diffuse" value="1.0 1.0 1.0 1.0" />
       <component type="specular" value="1.0 1.0 1.0 1.0" />
     </appearance>
-    <appearance id="metal" shininess="120" textureref="metal_texture_1" >
+    <appearance id="metal" shininess="120" textureref="" >
       <component type="ambient" value="0.8 0.8 0.8 1" />
       <component type="diffuse" value="0.7 0.7 0.7 1" />
       <component type="specular" value="0.9 0.9 0.9 1" />
@@ -60,6 +48,10 @@
     </appearance>
   </appearances>
 
+  <animations>
+    <animation id="circle" span="10" type="circular" center="0 0 0" radius="5" startang="0" rotang="360" />
+    <!--<animation id=”ss” span=”ff” type=”circular” center="ff ff ff" radius="ff" startang="ff" rotang="ff" /> -->
+  </animations>
 
   <graph rootid="scene">
 
@@ -84,18 +76,26 @@
       <appearanceref id="mountain"/>
 
       <primitives>
-        <patch order="2" partsU="50" partsV="50" compute="fill">
-          <controlpoint x="0" y="0" z="0" />
-          <controlpoint x="0" y="0" z="1" />
-          <controlpoint x="0" y="0" z="2" />
+        <patch order="3" partsU="50" partsV="50" compute="fill">
+          <controlpoint x="6" y="0" z="-6" />
+          <controlpoint x="6" y="0" z="-2" />
+          <controlpoint x="6" y="0" z="2" />
+          <controlpoint x="6" y="0" z="6" />
 
-          <controlpoint x="0" y="0" z="0" />
-          <controlpoint x="0.5" y="0" z="1" />
-          <controlpoint x="1" y="0" z="2" />
+          <controlpoint x="2" y="0" z="-6" />
+          <controlpoint x="2" y="15" z="-2" />
+          <controlpoint x="2" y="15" z="2" />
+          <controlpoint x="2" y="0" z="6" />
 
-          <controlpoint x="0" y="0" z="0" />
-          <controlpoint x="0.5" y="0" z="0" />
-          <controlpoint x="1" y="0" z="0" />
+          <controlpoint x="-2" y="0" z="-6" />
+          <controlpoint x="-2" y="15" z="-2" />
+          <controlpoint x="-2" y="15" z="2" />
+          <controlpoint x="-2" y="0" z="6" />
+
+          <controlpoint x="-6" y="0" z="-6" />
+          <controlpoint x="-6" y="0" z="-2" />
+          <controlpoint x="-6" y="0" z="2" />
+          <controlpoint x="-6" y="0" z="6" />
         </patch>
       </primitives>
 
@@ -145,6 +145,7 @@
         <transform type="scale" factor="2 2 2" />
       </transforms>
       <appearanceref id="camo" />
+      <animationref id="circle" />
       <primitives>
         <vehicle />
       </primitives>
